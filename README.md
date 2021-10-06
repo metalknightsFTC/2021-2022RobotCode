@@ -1,2 +1,2 @@
 # 2021-2022RobotCode
-all code for the season updated weekly
+all our current code for the season it gets updated weekly along with our boilerplates
