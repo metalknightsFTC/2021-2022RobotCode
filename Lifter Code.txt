@@ -1,0 +1,45 @@
+private DcMotor Lifter;
+    int ticksPerRotation = 1100;
+    
+    //Estimated 5in per rotation
+    int targetRotations = 2;
+    
+    
+    
+    @Override
+    public void runOpMode() {
+        Lifter = hardwareMap.get(DcMotor.class, "Lift");
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+        
+        //converts rotations into ticks
+        targetRotations *= ticksPerRotation;
+        //resets and activates encoders
+        Lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        Lifter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        
+        
+        waitForStart();
+        runtime.reset();
+
+        while (opModeIsActive()) {
+            //checks to see if the current Number of ticks is less than the target number of ticks.
+            if(Lifter.getCurrentPosition()<targetRotations)
+            {
+                Lifter.setPower(.5);
+            }else{
+                Lifter.setPower(0);
+            }
+            
+            
+            
+            //displays the target number of rotations and current number of rotations. this is a helpful measure
+            //it will help to notify the drivers of an issue with the lift because if the current ticks are above or under a certain
+            //tolerance it means that there is an issue and the drivers need to switch to manual to solve the issue and or
+            //to prevent further damage to the robot.
+            telemetry.addData("Target Ticks: " , targetRotations); 
+            telemetry.addData("Current Ticks: " , Lifter.getCurrentPosition());
+            telemetry.update();
+        }
+    }
